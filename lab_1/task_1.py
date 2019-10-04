@@ -1,8 +1,7 @@
 def task_1():
-    task = ''
+    task = '\n'
     for i in range(1,10):
-        task += str(i)*i+'\n'
-    print(task)
+        task += f'{str(i)*i}\n'
     return task
 
 
