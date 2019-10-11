@@ -18,9 +18,9 @@ def counting_sort(values, _max, _min=0):
     for i in values:
         counter[_min+i] += 1
     j = 0
-    for i in range(_min,_max):
+    for i in range(_max-_min):
         for i1 in range(counter[i]):
-            values[j] = i
+            values[j] = i+_min
             j += 1
 
     return values
