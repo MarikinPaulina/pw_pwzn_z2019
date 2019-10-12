@@ -9,9 +9,18 @@ def count_letters(msg):
     :rtype: list
     """
 
-    
+    letters, counter = [], []
+    for l in msg:
+        if l in letters:
+            counter[letters.index(l)] += 1
+        else:
+            letters.append(l)
+            counter.append(1)
+    counter = [c for l,c in sorted(zip(letters,counter))]
+    letters = sorted(letters)
+    m = counter.index(max(counter))
 
-    pass
+    return letters[m], counter[m]
 
 
 if __name__ == '__main__':
