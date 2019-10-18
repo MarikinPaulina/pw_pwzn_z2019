@@ -14,7 +14,16 @@ def parse_input(input):
     """
 
 # hint: module string i str
-    pass
+
+    input_clean = input.lstrip().rstrip()
+    lines = input_clean.splitlines()
+    lists = list(map(lambda line: line.split(' '), lines))
+
+    def str_to_int(input):
+        return list(map(lambda x: int(x), input))
+    number_lists = list(map(lambda x: str_to_int(x), lists))
+    output = number_lists
+    return output
 
 
 if __name__ == '__main__':
