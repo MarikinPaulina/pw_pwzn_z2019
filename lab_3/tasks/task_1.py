@@ -12,6 +12,8 @@ def parse_input(input):
     :return: list of parsed list of integers
     :rtype: list
     """
+
+# hint: module string i str
     pass
 
 

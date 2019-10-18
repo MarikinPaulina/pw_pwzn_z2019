@@ -15,6 +15,8 @@ Zwraca listę posortowanych obiektów typu datetime w strefie czasowej UTC.
 Funkcje group_dates oraz format_day mają pomoc w grupowaniu kodu.
 UWAGA: Proszę ograniczyć użycie pętli do minimum.
 """
+
+# hint datetime: parse, format; max 4 for (da się w 2)
 import datetime
 
 

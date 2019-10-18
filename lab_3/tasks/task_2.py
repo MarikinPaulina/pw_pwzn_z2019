@@ -15,6 +15,8 @@ def check_frequency(input):
     :return: list of integers with results of operation 3
     :rtype: list
     """
+
+# hint collections, jedna pętla
     pass
 
 
