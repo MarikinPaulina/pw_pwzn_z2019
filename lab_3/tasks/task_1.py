@@ -1,4 +1,4 @@
-def parse_input(input):
+def parse_input(_input):
     """
     Splits multiline string into list of lists with integers.
 
@@ -15,12 +15,12 @@ def parse_input(input):
 
 # hint: module string i str
 
-    input_clean = input.lstrip().rstrip()
+    input_clean = _input.lstrip().rstrip()
     lines = input_clean.splitlines()
     lists = list(map(lambda line: line.split(' '), lines))
 
-    def str_to_int(input):
-        return list(map(lambda x: int(x), input))
+    def str_to_int(str_list):
+        return list(map(lambda x: int(x), str_list))
     number_lists = list(map(lambda x: str_to_int(x), lists))
     output = number_lists
     return output

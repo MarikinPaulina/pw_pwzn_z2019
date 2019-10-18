@@ -18,7 +18,21 @@ def check_frequency(input):
     """
 
 # hint collections, jedna pętla
-    pass
+    from collections import Counter
+    from task_1 import parse_input
+
+    commands = parse_input(input)
+    numbers = Counter()
+    frequency = []
+    for command, value in commands:
+        if command == 1:
+            numbers[value] += 1
+        elif command == 2:
+            n = numbers[value]
+            numbers[value] = n-1 if n > 0 else 0
+        elif command == 3:
+            frequency.append(numbers[value])
+    return frequency
 
 
 _input = """
