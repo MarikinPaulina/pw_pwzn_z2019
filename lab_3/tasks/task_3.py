@@ -18,6 +18,7 @@ UWAGA: Proszę ograniczyć użycie pętli do minimum.
 
 # hint datetime: parse, format; max 4 for (da się w 2)
 import datetime
+from itertools import groupby
 
 
 def sort_dates(date_str, date_format='%a %d %B %Y %H:%M:%S %z'):
@@ -32,7 +33,10 @@ def sort_dates(date_str, date_format='%a %d %B %Y %H:%M:%S %z'):
     :rtype: list
     """
     date_str_clean = list(filter(lambda x: x != '', map(lambda x: x.strip(), date_str.splitlines())))
-    output = sorted(list(map(lambda x: datetime.datetime.strptime(x, date_format), date_str_clean)), reverse=True)
+    dates = list(map(
+        lambda x: datetime.datetime.strptime(x, date_format).astimezone(datetime.timezone.utc),
+        date_str_clean))
+    output = sorted(dates, reverse=True)
     return output
 
 
@@ -44,6 +48,14 @@ def group_dates(dates):
     :type dates: list
     :return:
     """
+    days = []
+    events = []
+    iter = groupby(dates, lambda x: x.date())
+    for day, event in iter:
+        days.append(day)
+        events.append(list(event))
+    return days, events
+
 
 
 def format_day(day, events):
@@ -57,10 +69,13 @@ def format_day(day, events):
     :return: parsed message for day
     :rtype: str
     """
-    pass
+    output = datetime.datetime.strftime(day,'%Y-%m-%d\n')
+    for e in events:
+        output += datetime.datetime.strftime(e,'\t%H:%M:%S\n')
+    return output
 
 
-def parse_dates(date_str, date_format=''):
+def parse_dates(date_str, date_format='%a %d %B %Y %H:%M:%S %z'):
     """
     Parses and groups (in UTC) given list of events.
 
@@ -71,7 +86,11 @@ def parse_dates(date_str, date_format=''):
     :return: parsed events
     :rtype: str
     """
-    pass
+
+    grouped_events = group_dates(sort_dates(date_str, date_format))
+    string_list = list(map(lambda d, e: format_day(d, e), *grouped_events))
+    output = ('----\n'.join(string_list)).rstrip()
+    return output
 
 
 if __name__ == '__main__':
