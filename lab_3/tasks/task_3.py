@@ -20,7 +20,7 @@ UWAGA: Proszę ograniczyć użycie pętli do minimum.
 import datetime
 
 
-def sort_dates(date_str, date_format=''):
+def sort_dates(date_str, date_format='%a %d %B %Y %H:%M:%S %z'):
     """
     Parses and sorts given message to list of datetimes objects descending.
 
@@ -31,6 +31,9 @@ def sort_dates(date_str, date_format=''):
     :return: sorted desc list of utc datetime objects
     :rtype: list
     """
+    date_str_clean = list(filter(lambda x: x != '', map(lambda x: x.strip(), date_str.splitlines())))
+    output = sorted(list(map(lambda x: datetime.datetime.strptime(x, date_format), date_str_clean)), reverse=True)
+    return output
 
 
 def group_dates(dates):

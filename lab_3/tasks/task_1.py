@@ -15,13 +15,12 @@ def parse_input(_input):
 
 # hint: module string i str
 
-    input_clean = _input.lstrip().rstrip()
-    lines = input_clean.splitlines()
+    lines = _input.strip().splitlines()
     lists = list(map(lambda line: line.split(' '), lines))
 
     def str_to_int(str_list):
-        return list(map(lambda x: int(x), str_list))
-    number_lists = list(map(lambda x: str_to_int(x), lists))
+        return list(map(int, str_list))
+    number_lists = list(map(str_to_int, lists))
     output = number_lists
     return output
 
