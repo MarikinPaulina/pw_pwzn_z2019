@@ -12,9 +12,11 @@ Wszystkie metody sprawdzają wymiar.
 
 
 class Vector:
-    dim = None  # Wymiar vectora
+    _dim = None  # Wymiar vectora
+
     def __init__(self, *args):
-        raise NotImplemented
+        self.vec = tuple(i for i in args)
+        # raise NotImplemented
 
     @staticmethod
     def calculate_vector(beg, end):
@@ -45,14 +47,31 @@ class Vector:
         """
         raise NotImplemented
 
+    @property
+    def dim(self):
+        return len(self.vec)
+
+    def __eq__(self, other):
+        if self.dim == other.dim:
+            out = True
+            for a, b in zip(self.vec, other.vec):
+                if a != b:
+                    out = False
+            return out
+
+    def __add__(self, other):
+        if self.dim == other.dim:
+            out = Vector(a+b for a, b in zip(self.vec, other.vec))
+            return out
 
 if __name__ == '__main__':
-    v1 = Vector(1,2,3)
-    v2 = Vector(1,2,3)
-    assert v1 + v2 == Vector(2,4,6)
-    assert v1 - v2 == Vector(0,0,0)
-    assert v1 * 2 == Vector(2,4,6)
+    v1 = Vector(1, 2, 3)
+    v2 = Vector(1, 2, 3)
+    assert v1 == v2
+    assert v1 + v2 == Vector(2, 4, 6)
+    assert v1 - v2 == Vector(0, 0, 0)
+    assert v1 * 2 == Vector(2, 4, 6)
     assert v1 * v2 == 14
-    assert len(Vector(3,4)) == 5.
-    assert Vector.calculate_vector([0, 0, 0], [1,2,3]) == (1,2,3)
-    assert Vector.from_points([0, 0, 0], [1,2,3]) == Vector(1,2,3)
+    assert len(Vector(3, 4)) == 5.
+    assert Vector.calculate_vector([0, 0, 0], [1, 2, 3]) == (1, 2, 3)
+    assert Vector.from_points([0, 0, 0], [1, 2, 3]) == Vector(1, 2, 3)
