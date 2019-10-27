@@ -15,7 +15,7 @@ class Vector:
     _dim = None  # Wymiar vectora
 
     def __init__(self, *args):
-        self.vec = tuple(i for i in args)
+        self.vec = tuple(list(i for i in args))
         # raise NotImplemented
 
     @staticmethod
@@ -30,7 +30,9 @@ class Vector:
         :return: Calculated vector
         :rtype: tuple
         """
-        raise NotImplemented
+        if len(end) == len(beg):
+            result = Vector(*end) - Vector(*beg)
+            return result.vec
 
     @classmethod
     def from_points(cls, beg, end):
@@ -45,7 +47,9 @@ class Vector:
         :return: New vector
         :rtype: tuple
         """
-        raise NotImplemented
+        if len(end) == len(beg):
+            result = Vector(*end) - Vector(*beg)
+            return result
 
     @property
     def dim(self):
@@ -61,13 +65,36 @@ class Vector:
 
     def __add__(self, other):
         if self.dim == other.dim:
-            out = Vector(a+b for a, b in zip(self.vec, other.vec))
+            args = list(a+b for a, b in zip(self.vec, other.vec))
+            out = Vector(*args)
             return out
+
+    def __sub__(self, other):
+        if self.dim == other.dim:
+            args = list(a-b for a, b in zip(self.vec, other.vec))
+            out = Vector(*args)
+            return out
+
+    def __mul__(self, other):
+        if type(other) == type(self):
+            if self.dim == other.dim:
+                args = list(a*b for a, b in zip(self.vec, other.vec))
+                out = sum(args)
+                return out
+        else:
+            args = list(a*other for a in self.vec)
+            out = Vector(*args)
+            return out
+
+    def __len__(self):
+        args = list(a ** 2 for a in self.vec)
+        out = sum(args) ** 0.5
+        return int(out)
+
 
 if __name__ == '__main__':
     v1 = Vector(1, 2, 3)
     v2 = Vector(1, 2, 3)
-    assert v1 == v2
     assert v1 + v2 == Vector(2, 4, 6)
     assert v1 - v2 == Vector(0, 0, 0)
     assert v1 * 2 == Vector(2, 4, 6)
