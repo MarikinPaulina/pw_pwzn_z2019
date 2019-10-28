@@ -30,11 +30,7 @@ class Vector:
         :return: Calculated vector
         :rtype: tuple
         """
-        if len(end) == len(beg):
-            result = Vector(*end) - Vector(*beg)
-            return result.vec
-        else:
-            raise ValueError
+        return Vector.from_points(beg, end).vec
 
     @classmethod
     def from_points(cls, beg, end):
@@ -95,10 +91,13 @@ class Vector:
             out = Vector(*args)
             return out
 
-    def __len__(self):
+    def len(self):
         args = list(a ** 2 for a in self.vec)
         out = sum(args) ** 0.5
         return int(out)
+
+    def __len__(self):
+        return self.dim
 
 
 if __name__ == '__main__':
