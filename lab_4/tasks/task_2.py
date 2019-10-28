@@ -15,7 +15,7 @@ class Vector:
     _dim = None  # Wymiar vectora
 
     def __init__(self, *args):
-        self.vec = tuple(list(i for i in args))
+        self.vec = args
         # raise NotImplemented
 
     @staticmethod
@@ -33,6 +33,8 @@ class Vector:
         if len(end) == len(beg):
             result = Vector(*end) - Vector(*beg)
             return result.vec
+        else:
+            raise ValueError
 
     @classmethod
     def from_points(cls, beg, end):
@@ -48,8 +50,10 @@ class Vector:
         :rtype: tuple
         """
         if len(end) == len(beg):
-            result = Vector(*end) - Vector(*beg)
+            result = cls(*end) - cls(*beg)
             return result
+        else:
+            raise ValueError
 
     @property
     def dim(self):
@@ -57,30 +61,35 @@ class Vector:
 
     def __eq__(self, other):
         if self.dim == other.dim:
-            out = True
             for a, b in zip(self.vec, other.vec):
                 if a != b:
-                    out = False
-            return out
+                    return False
+            return True
 
     def __add__(self, other):
         if self.dim == other.dim:
             args = list(a+b for a, b in zip(self.vec, other.vec))
             out = Vector(*args)
             return out
+        else:
+            raise ValueError
 
     def __sub__(self, other):
         if self.dim == other.dim:
             args = list(a-b for a, b in zip(self.vec, other.vec))
             out = Vector(*args)
             return out
+        else:
+            raise ValueError
 
     def __mul__(self, other):
-        if type(other) == type(self):
+        if isinstance(other, Vector):
             if self.dim == other.dim:
                 args = list(a*b for a, b in zip(self.vec, other.vec))
                 out = sum(args)
                 return out
+            else:
+                raise ValueError
         else:
             args = list(a*other for a in self.vec)
             out = Vector(*args)

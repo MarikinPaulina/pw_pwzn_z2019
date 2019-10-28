@@ -11,7 +11,7 @@ import operator
 
 class Calculator:
     def __init__(self):
-        self.memory = None
+        self._memory = None
         # Podpowiedz: użyj atrybutu do przechowywania wyniku
         # ostatniej wykonanej operacji, tak by metoda memorize przypisywała
         # wynik zapisany w tym atrybucie
@@ -37,24 +37,24 @@ class Calculator:
         :rtype: float
         """
         if arg2 is None:
-            arg2 = self.memory
+            arg2 = self._memory
         self._short_memory = self.operations[operator](arg1, arg2)
         return self._short_memory
         # raise NotImplementedError
 
     def memorize(self):
         """Saves last operation result to memory."""
-        self.memory = self._short_memory
+        self._memory = self._short_memory
         # raise NotImplementedError
 
     def clean_memory(self):
         """Cleans memorized value"""
-        self.memory = None
+        self._memory = None
         # raise NotImplementedError
 
     def in_memory(self):
         """Prints memorized value."""
-        print(f"Zapamiętana wartość: {self.memory}")
+        print(f"Zapamiętana wartość: {self._memory}")
 
 
 if __name__ == '__main__':
