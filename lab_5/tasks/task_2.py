@@ -10,7 +10,7 @@ oraz definiujące jej metody:
 Na (2 pkt.):
 - Zwiąż ze sobą boki a i b klasy Square (tzn. modyfikacja boku a lub boku b
 powinna ustawiać tę samą wartość dla drugiego atrybutu).
-- Zaimplementuj metody statyczne pozwalające na obliczenie pola
+- Zaimplementuj metody statyczne pozwalające na obliczenie pola i obwodu  ### get_perimeter i get_area
 figury na podstawie podanych parametrów.
 - Zaimplementuj classmethod "name" zwracającą nazwę klasy.
 ---------
@@ -26,6 +26,7 @@ klasy Square o takich przekątnych.
 (w klasie Square)
 """
 
+from math import pi
 
 class Figure:
     def area(self):
@@ -34,8 +35,9 @@ class Figure:
     def perimeter(self):
         raise NotImplementedError
 
-    def name(self):
-        raise NotImplementedError
+    @classmethod
+    def name(cls):
+        return cls.__name__
 
     def __str__(self):
         return (
@@ -44,13 +46,36 @@ class Figure:
         )
 
 
-class Circle:
-    pass
+class Circle(Figure):
+    r = None
+
+    def __init__(self, r):
+        self.r = r
+
+    @property
+    def area(self):
+        return pi*self.r**2
+
+    @property
+    def perimeter(self):
+        return 2*pi*self.r
 
 
-class Rectangle:
-    pass
+class Rectangle(Figure):
+    a = None
+    b = None
 
+    def __init__(self, a, b):
+        self.a = a
+        self.b = b
+
+    @property
+    def area(self):
+        return self.a*self.b
+
+    @property
+    def perimeter(self):
+        return 2*(self.a + self.b)
 
 class Square:
     pass
@@ -61,6 +86,7 @@ class Diamond:
 
 
 if __name__ == '__main__':
+
     kolo1 = Circle(1)
     assert str(kolo1) == 'Circle: area=3.142, perimeter=6.283'
 

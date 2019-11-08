@@ -18,7 +18,7 @@ class WrongOperation(Exception):
     pass
 
 
-class NotNumberArgument(Exception):
+class NotNumberArgument(Exception):  # też dla stringów
     pass
 
 
