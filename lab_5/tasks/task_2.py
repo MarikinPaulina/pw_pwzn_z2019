@@ -25,13 +25,15 @@ klasy Square o takich przekątnych.
 - Zwiąż ze sobą atrybuty e i f (w klasie Diamond) oraz a, b, e i f
 (w klasie Square)
 """
-
 from math import pi
 
+
 class Figure:
+    @property
     def area(self):
         raise NotImplementedError
 
+    @property
     def perimeter(self):
         raise NotImplementedError
 
@@ -41,8 +43,8 @@ class Figure:
 
     def __str__(self):
         return (
-            f'{self.name()}: area={self.area():.3f}, '
-            f'perimeter={self.perimeter():.3f}'
+            f'{self.name()}: area={self.area:.3f}, '
+            f'perimeter={self.perimeter:.3f}'
         )
 
 
@@ -77,8 +79,11 @@ class Rectangle(Figure):
     def perimeter(self):
         return 2*(self.a + self.b)
 
-class Square:
-    pass
+class Square(Rectangle):
+
+    def __init__(self, a):
+        self.a = a
+        self.b = a
 
 
 class Diamond:
