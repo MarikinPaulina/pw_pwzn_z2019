@@ -10,7 +10,7 @@ oraz definiujące jej metody:
 Na (2 pkt.):
 - Zwiąż ze sobą boki a i b klasy Square (tzn. modyfikacja boku a lub boku b
 powinna ustawiać tę samą wartość dla drugiego atrybutu).
-- Zaimplementuj metody statyczne pozwalające na obliczenie pola i obwodu  ### get_perimeter i get_area
+- Zaimplementuj metody statyczne pozwalające na obliczenie pola i obwodu
 figury na podstawie podanych parametrów.
 - Zaimplementuj classmethod "name" zwracającą nazwę klasy.
 ---------
@@ -29,11 +29,9 @@ from math import pi
 
 
 class Figure:
-    @property
     def area(self):
         raise NotImplementedError
 
-    @property
     def perimeter(self):
         raise NotImplementedError
 
@@ -49,45 +47,88 @@ class Figure:
 
 
 class Circle(Figure):
-    r = None
+    __r = None
 
     def __init__(self, r):
-        self.r = r
+        self.__r = r
+
+    @classmethod
+    def area(cls, r):
+        return pi*r**2
 
     @property
     def area(self):
-        return pi*self.r**2
+        return pi*self.__r**2
+
+    @classmethod
+    def perimeter(cls, r):
+        return 2*pi*r
 
     @property
     def perimeter(self):
-        return 2*pi*self.r
+        return 2*pi*self.__r
 
 
 class Rectangle(Figure):
-    a = None
-    b = None
+    __a = None
+    __b = None
 
     def __init__(self, a, b):
-        self.a = a
-        self.b = b
+        self.__a = a
+        self.__b = b
+
+    @classmethod
+    def area(cls, a, b):
+        return a*b
 
     @property
     def area(self):
-        return self.a*self.b
+        return self.__a * self.__b
+
+    @classmethod
+    def perimeter(cls, a, b):
+        return 2*(a+b)
 
     @property
     def perimeter(self):
-        return 2*(self.a + self.b)
+        return 2*(self.__a + self.__b)
 
-class Square(Rectangle):
+
+class Diamond(Figure):
+    __e = None
+    __f = None
+
+    @property
+    def area(self):
+        return self.__e*self.__f*0.5
+
+    @property
+    def perimeter(self):
+        return 2*(self.__e**2 + self.__f**2)**0.5
+
+
+class Square(Rectangle, Diamond):
 
     def __init__(self, a):
-        self.a = a
-        self.b = a
+        super().__init__(a, a)
 
+    @property
+    def a(self):
+        return self.__a
 
-class Diamond:
-    pass
+    @a.setter
+    def a(self, value):
+        self.__a = value
+        self.__b = value
+
+    @classmethod
+    def area(cls, a):
+        return a**2
+
+    @classmethod
+    def perimeter(cls, a):
+        return 4*a
+
 
 
 if __name__ == '__main__':
@@ -100,7 +141,7 @@ if __name__ == '__main__':
 
     # print("Square")
     sqr_1 = Square(4)
-    assert str(sqr_1) == 'Square: area=8.000, perimeter=16.000'
+    assert str(sqr_1) == 'Square: area=16.000, perimeter=16.000'  # Tu był błąd (area=8.000)
 
     diam_1 = Diamond(6, 8)
     assert str(diam_1) == 'Diamond: area=24.000, perimeter=20.000'
