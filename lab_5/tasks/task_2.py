@@ -29,9 +29,11 @@ from math import pi
 
 
 class Figure:
+    @property
     def area(self):
         raise NotImplementedError
 
+    @property
     def perimeter(self):
         raise NotImplementedError
 
@@ -70,7 +72,6 @@ class Circle(Figure):
 
 
 class Rectangle(Figure):
-
     __a = None
     __b = None
 
