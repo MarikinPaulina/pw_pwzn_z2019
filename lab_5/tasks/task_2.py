@@ -47,70 +47,36 @@ class Figure:
 
 
 class Circle(Figure):
-    __r = None
+    r = None
 
     def __init__(self, r):
-        self.__r = r
+        self.r = r
 
-    @classmethod
-    def area(cls, r):
-        return pi*r**2
+    @staticmethod
+    def get_area(r):
+        return pi * r**2
 
-    @property
-    def area(self):
-        return pi*self.__r**2
-
-    @classmethod
-    def perimeter(cls, r):
+    @staticmethod
+    def get_perimeter(r):
         return 2*pi*r
 
     @property
+    def area(self):
+        return pi * self.r ** 2
+
+    @property
     def perimeter(self):
-        return 2*pi*self.__r
+        return 2*pi*self.r
 
 
 class Rectangle(Figure):
+
     __a = None
     __b = None
 
     def __init__(self, a, b):
-        self.__a = a
-        self.__b = b
-
-    @classmethod
-    def area(cls, a, b):
-        return a*b
-
-    @property
-    def area(self):
-        return self.__a * self.__b
-
-    @classmethod
-    def perimeter(cls, a, b):
-        return 2*(a+b)
-
-    @property
-    def perimeter(self):
-        return 2*(self.__a + self.__b)
-
-
-class Diamond(Figure):
-    __e = None
-    __f = None
-
-    @property
-    def area(self):
-        return self.__e*self.__f*0.5
-
-    @property
-    def perimeter(self):
-        return 2*(self.__e**2 + self.__f**2)**0.5
-
-
-class Square(Rectangle, Diamond):
-
-    def __init__(self, a):
-        super().__init__(a, a)
+        self.a = a
+        self.b = b
 
     @property
     def a(self):
@@ -119,20 +85,124 @@ class Square(Rectangle, Diamond):
     @a.setter
     def a(self, value):
         self.__a = value
+
+    @property
+    def b(self):
+        return self.__b
+
+    @b.setter
+    def b(self, value):
         self.__b = value
 
-    @classmethod
-    def area(cls, a):
-        return a**2
+    @staticmethod
+    def get_area(a, b):
+        return a * b
 
-    @classmethod
-    def perimeter(cls, a):
-        return 4*a
+    @staticmethod
+    def get_perimeter(a, b):
+        return 2 * (a+b)
 
+    @property
+    def area(self):
+        return self.a * self.b
+
+    @property
+    def perimeter(self):
+        return 2*(self.a + self.b)
+
+
+class Diamond(Figure):
+    """W sumie nie rozumiem jak niby e i f mają być związane.
+    Bo w kwadracie to jest przejrzyste, ale tutaj: co to ma zachowywać?"""
+
+    __e = None
+    __f = None
+
+    def __init__(self, e, f):
+        self.e = e
+        self.f = f
+
+    @property
+    def e(self):
+        return self.__e
+
+    @e.setter
+    def e(self, value):
+        self.__e = value
+
+    @property
+    def f(self):
+        return self.__f
+
+    @f.setter
+    def f(self, value):
+        self.__f = value
+
+    @property
+    def area(self):
+        return self.e*self.f*0.5
+
+    @property
+    def perimeter(self):
+        return 2*(self.e**2 + self.f**2)**0.5
+
+    def are_diagonals_equal(self):
+        return self.e == self.f
+
+    def to_square(self):
+        if self.are_diagonals_equal():
+            return Square(self.e/2**0.5)
+
+
+class Square(Rectangle, Diamond):
+
+    def __init__(self, a):
+        self.a = a
+
+    def get_a(self):
+        return self.__a
+
+    def set_a(self, value):
+        self.__a = value
+        self.__b = value
+        self.__e = value * 2 ** 0.5
+        self.__f = value * 2 ** 0.5
+
+    a = property(get_a, set_a)
+
+    def get_b(self):
+        return self.__b
+
+    def set_b(self, value):
+        self.__a = value
+        self.__b = value
+        self.__e = value * 2 ** 0.5
+        self.__f = value * 2 ** 0.5
+
+    b = property(get_b, set_b)
+
+    def get_e(self):
+        return self.__e
+
+    def set_e(self, value):
+        self.__a = value * 2 ** -0.5
+        self.__b = value * 2 ** -0.5
+        self.__e = value
+        self.__f = value
+
+    e = property(get_e, set_b)
+
+    def get_f(self):
+        return self.__f
+
+    def set_f(self, value):
+        self.__a = value * 2 ** -0.5
+        self.__b = value * 2 ** -0.5
+        self.__e = value
+        self.__f = value
 
 
 if __name__ == '__main__':
-
     kolo1 = Circle(1)
     assert str(kolo1) == 'Circle: area=3.142, perimeter=6.283'
 
@@ -141,7 +211,7 @@ if __name__ == '__main__':
 
     # print("Square")
     sqr_1 = Square(4)
-    assert str(sqr_1) == 'Square: area=16.000, perimeter=16.000'  # Tu był błąd (area=8.000)
+    assert str(sqr_1) == 'Square: area=16.000, perimeter=16.000'
 
     diam_1 = Diamond(6, 8)
     assert str(diam_1) == 'Diamond: area=24.000, perimeter=20.000'
@@ -150,4 +220,4 @@ if __name__ == '__main__':
     assert str(diam_2) == 'Diamond: area=0.500, perimeter=2.828'
 
     sqr_3 = diam_2.to_square()
-    assert str(diam_2) == 'Square: area=0.500, perimeter=2.828'
+    assert str(sqr_3) == 'Square: area=0.500, perimeter=2.828'
