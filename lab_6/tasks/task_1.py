@@ -34,11 +34,52 @@ Otrzymuje się wtedy 2 pkt.
 UWAGA 2: Wszystkie jednoski masy występują w przykładzie.
 """
 from pathlib import Path
+import csv
+from collections import OrderedDict
 
 
 def select_animals(input_path, output_path, compressed=False):
-    pass
+    with open(input_path) as _file:
+        reader = csv.DictReader(_file)
+        animals = {}
+        for row in reader:
+            if row['genus'] in animals.keys():
+                if row['gender'] in animals[row['genus']].keys():
+                    if mass_to_number(row['mass']) < mass_to_number(animals[row['genus']][row['gender']]['mass']):
+                        animals[row['genus']][row['gender']] = row
+                else:
+                    animals[row['genus']][row['gender']] = row
+            else:
+                animals[row['genus']] = {row['gender']: row}
+    sorted_animals = OrderedDict(sorted((animals.items())))
+    out = []
+    for species in sorted_animals.values():
+        one_species = [gen for gen in species.values()]
+        one_species.sort(key=lambda i: i['name'])
+        out.extend(one_species)
+    with open(output_path, 'w') as _file:
+        if compressed:
+            _file.write('uu')
+            gender_dict = {'female': 'F', 'male': 'M'}
+            writer = csv.DictWriter(_file, ['id', 'gender', 'mass'], extrasaction='ignore', delimiter='_')
+            for animal in out:
+                animal['mass'] = f"{mass_to_number(animal['mass']):.3e}"
+                animal['gender'] = gender_dict[animal['gender']]
+        else:
+            writer = csv.DictWriter(_file, out[0].keys())
+        writer.writeheader()
+        writer.writerows(out)
 
+def mass_to_number(mass):
+    sufix = {
+        'mg': 1e-6,
+        'kg': 1,
+        'g' : 1e-3,
+        'Mg': 1e3}
+
+    num, suf = mass.split()
+    number = float(num)*sufix[suf]
+    return number
 
 if __name__ == '__main__':
     input_path = Path('s_animals.txt')
