@@ -23,7 +23,17 @@ def calculate_neighbours(board):
     :type board: np.ndarray
     :param periodic
     """
-    pass
+    neighbours = np.zeros(board.shape, int)
+    neighbours[1:, 1:] += board[:-1, :-1]  # lewy górny
+    neighbours[1:] += board[:-1]  # górny
+    neighbours[1:, :-1] += board[:-1, 1:]  # prawy górny
+    neighbours[:, :-1] += board[:, 1:]  # prawy
+    neighbours[:-1, :-1] += board[1:, 1:]  # prawy dolny
+    neighbours[:-1] += board[1:]  # dolny
+    neighbours[:-1, 1:] += board[1:, :-1]  # lewy dolny
+    neighbours[:, 1:] += board[:, :-1]  # lewy
+
+    return neighbours
 
 
 def iterate(board):
@@ -44,10 +54,17 @@ def iterate(board):
     :return: next board state
     :rtype: np.ndarray
     """
-    pass
+
+    neighbours = calculate_neighbours(board)
+    new_board = np.zeros_like(board)
+    new_board[board] = np.logical_or(neighbours[board] == 2, neighbours[board] == 3)
+    new_board[np.logical_not(board)] = neighbours[np.logical_not(board)] == 3
+    return new_board
+
 
 
 if __name__ == '__main__':
+
     _board = np.array([
         [False, False, False,  True, False,  True],
         [ True, False,  True, False, False,  True],
@@ -57,20 +74,20 @@ if __name__ == '__main__':
         [False,  True,  True,  True, False,  True]
     ])
     print(iterate(_board))
-    assert calculate_neighbours(_board) == np.array([
+    assert (calculate_neighbours(_board) == np.array([
         [1, 2, 2, 1, 3, 1,],
         [2, 4, 3, 4, 6, 3,],
         [3, 5, 5, 3, 4, 3,],
         [3, 3, 4, 4, 5, 2,],
         [2, 4, 6, 3, 4, 2,],
         [1, 1, 3, 2, 3, 0,],
-    ])
-    assert iterate(_board) == np.array([
+    ])).all()
+    assert (iterate(_board) == np.array([
         [False, False, False, False, False, False],
         [ True, False,  True, False, False,  True],
         [ True, False, False,  True, False,  True],
         [False,  True, False, False, False,  True],
         [False, False, False,  True, False, False],
         [False, False,  True,  True, False, False],
-    ])
+    ])).all()
 
