@@ -16,8 +16,12 @@ def estimate_pi(n):
     :return: Estimated Pi value
     :rtype: float
     """
-    pass
-
+    x = np.random.rand(n) * 2 - 1
+    y = np.random.rand(n) * 2 - 1
+    r2 = x**2 + y**2
+    k = (r2 < 1).sum()
+    pi = 4*k / n
+    return pi
 
 if __name__ == '__main__':
     np.testing.assert_approx_equal(estimate_pi(int(1e2)), np.pi, 1)
