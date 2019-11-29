@@ -6,8 +6,8 @@ def estimate_pi(n):
     Returns estimated value of pi.
 
     Funkcja szacuje wartość pi metodą probabilistyczną.
-    Wygenerujmy m punktów z obszaru [-1,1]^2. Niech k określa liczbę punktów
-    odległych od punku (0,0) o nie więcej niż 1. Proporcja 4k/m
+    Wygenerujmy n punktów z obszaru [-1,1]^2. Niech k określa liczbę punktów
+    odległych od punku (0,0) o nie więcej niż 1. Proporcja 4k/n
     powinna szacować wartość pi.
     (1pkt).
 

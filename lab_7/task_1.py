@@ -17,7 +17,21 @@ def least_sq(xy):
     :type xy: np.ndarray
     :return: Tuple of fitted parameters
     """
-    pass
+
+    N = xy.shape[1]
+    x = xy[0]
+    y = xy[1]
+
+    x_sum = x.sum()
+    x_2sum = (x**2).sum()
+    y_sum = y.sum()
+    xy_sum = (x*y).sum()
+
+    Delta = N * x_2sum - x_sum**2
+    B = (x_2sum*y_sum - x_sum*xy_sum) / Delta
+    A = (N*xy_sum - x_sum*y_sum) / Delta
+
+    return A, B
 
 
 if __name__ == '__main__':

@@ -6,7 +6,7 @@ def calculate_neighbours(board):
     Returns number of neighbours of board cells.
 
     Funkcja zwraca tablicę która w polu [R, C] zwraca liczbę sąsiadów którą
-    ma komórka board[R, C].
+    ma komórka board[R, C]. (nieperiodycznie)
     Obowiązuje sąsiedztwo Moore'a tzn. za sąsiada uznajemy żywą komórkę
     stykającą się bokiem bokach lub na ukos od danej komórki,
     więc maksymalna ilość sąsiadów danej komórki wynosi 8.
