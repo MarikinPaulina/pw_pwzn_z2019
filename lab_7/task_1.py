@@ -28,8 +28,8 @@ def least_sq(xy):
     xy_sum = (x*y).sum()
 
     Delta = N * x_2sum - x_sum**2
-    B = (x_2sum*y_sum - x_sum*xy_sum) / Delta
-    A = (N*xy_sum - x_sum*y_sum) / Delta
+    A = (x_2sum*y_sum - x_sum*xy_sum) / Delta
+    B = (N*xy_sum - x_sum*y_sum) / Delta
 
     return A, B
 
@@ -235,4 +235,4 @@ if __name__ == '__main__':
                         98.00343145869182,
                         98.9982680433363,
                         100.00083927400149]])
-    np.testing.assert_allclose(least_sq(points), (1, -1), atol=0.1)
+    np.testing.assert_allclose(least_sq(points), (1, 1), atol=0.1)  # tu był błąd (1, -1)

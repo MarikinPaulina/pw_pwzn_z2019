@@ -83,11 +83,11 @@ if __name__ == '__main__':
         [1, 1, 3, 2, 3, 0,],
     ])).all()
     assert (iterate(_board) == np.array([
-        [False, False, False, False, False, False],
-        [ True, False,  True, False, False,  True],
-        [ True, False, False,  True, False,  True],
-        [False,  True, False, False, False,  True],
-        [False, False, False,  True, False, False],
-        [False, False,  True,  True, False, False],
+        [False, False, False, False, True, False],
+        [True, False, True, False, False, True],
+        [True, False, False, True, False, True],
+        [True, True, False, False, False, True],
+        [False, False, False, True, False, False],
+        [False, False, True, True, True, False],
     ])).all()
 
