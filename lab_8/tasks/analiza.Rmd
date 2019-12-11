@@ -1,0 +1,45 @@
+```{python}
+import matplotlib.pyplot as plt
+import numpy as np
+from tools.fit_funcs import least_sq
+```
+
+```{python}
+data = np.loadtxt('data/input01.txt',delimiter=',',skiprows=1).T
+```
+
+```{python}
+linear_fit = least_sq(data[:2])
+```
+
+```{python}
+uncertainty_cutoff = np.abs(data[2]/(data[0]*linear_fit[0] + linear_fit[1])) < 0.05
+
+data_05 = data.T[uncertainty_cutoff].T
+linear_fit_05 = least_sq(data_05[:2])
+
+data_rest = data.T[np.logical_not(uncertainty_cutoff)].T
+```
+
+```{python}
+fig, ax = plt.subplots()
+
+ax.errorbar(data_05[0], data_05[1], data_05[2], fmt='ks', markersize=2)
+ax.errorbar(data_rest[0], data_rest[1], data_rest[2], fmt='r^', markersize=2)
+
+fit_line = data[0]*linear_fit[0] + linear_fit[1]
+ax.plot(data[0], fit_line, '--b', label='all')
+
+fit_line_05 = data_05[0]*linear_fit_05[0] + linear_fit_05[1]
+ax.plot(data_05[0], fit_line_05, '--g', label=r'$\Delta<5$%')
+
+ax.legend()
+```
+
+```{python}
+fig
+```
+
+```{python}
+fig.savefig('fitted_input01.png', dpi=100)
+```

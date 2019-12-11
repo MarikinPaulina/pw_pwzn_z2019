@@ -28,8 +28,8 @@ def least_sq(xy):
     xy_sum = (x*y).sum()
 
     Delta = N * x_2sum - x_sum**2
-    A = (x_2sum*y_sum - x_sum*xy_sum) / Delta
-    B = (N*xy_sum - x_sum*y_sum) / Delta
+    B = (x_2sum*y_sum - x_sum*xy_sum) / Delta
+    A = (N*xy_sum - x_sum*y_sum) / Delta
 
     return A, B
 
