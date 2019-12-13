@@ -27,6 +27,30 @@ class CalculatorGUI(tk.Frame):
     def init_bottom_pad(self):
         bottom_pad = tk.Frame(self)
 
+        # klawiatura pamięci
+        mem_pad = tk.Frame(bottom_pad)
+        mem_pad.pack(side=tk.LEFT)
+        ii = 0
+        tk.Button(
+            mem_pad, text='MC', width=5,
+            command=self.calculator.clean_memory
+        ).grid(row=ii, column=0)
+        ii += 1
+        # tk.Button(
+        #     mem_pad, text='MR', width=5,
+        #     command=partial(self.update_var, self.calculator.memory)
+        # ).grid(row=ii, column=0)
+        ii += 1
+        # tk.Button(
+        #     mem_pad, text='M+', width=5,
+        #     command=partial(self.calculator.memorize,
+        # ).grid(row=ii, column=0)
+        ii += 1
+        tk.Button(
+            mem_pad, text='C', width=5,
+            command=self.clear
+        ).grid(row=ii, column=0)
+
         # klawiatura numeryczna
         num_pad = tk.Frame(bottom_pad)
         num_pad.pack(side=tk.LEFT)
@@ -38,13 +62,13 @@ class CalculatorGUI(tk.Frame):
             ).grid(row=ii // 3, column=(2-ii) % 3)
         ii += 1
         tk.Button(
-            num_pad, text='C', width=5,
-            command=self.clear
+            num_pad, text='0', width=5,
+            command=partial(self.update_var, '0')
         ).grid(row=ii // 3, column=ii % 3)
         ii += 1
         tk.Button(
-            num_pad, text='0', width=5,
-            command=partial(self.update_var, '0')
+            num_pad, text='.', width=5,
+            command=partial(self.update_var, '.')
         ).grid(row=ii // 3, column=ii % 3)
         ii += 1
         tk.Button(
@@ -97,15 +121,23 @@ class CalculatorGUI(tk.Frame):
 
     def calculate_result(self):
         if self.variables['var_1'] and self.variables['var_2']:
-            var_1 = int(self.variables['var_1'])
-            var_2 = int(self.variables['var_2'])
+            var_1 = float(self.variables['var_1'])
+            var_2 = float(self.variables['var_2'])
             self.screen['text'] = self.calculator.run(
                 self.variables['operator'], var_1, var_2
             )
             self.init_variables()
+
+    def keyboard_binding(self):
+        for num in range(10):
+            self.screen.bind(f'<{num}>', partial(self.update_var, num))
+        for operation in self.calculator.operations.keys():
+            self.screen.bind(f'<{operation}>', partial(self.set_operator, operation))
+        self.screen.bind('<Return>', self.calculate_result)
 
 
 if __name__ == '__main__':
     root = tk.Tk()
     CalculatorGUI(root).pack()
     root.mainloop()
+# 35
