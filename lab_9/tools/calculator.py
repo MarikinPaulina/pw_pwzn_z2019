@@ -75,6 +75,7 @@ class Calculator:
     def memorize(self):
         """Saves last operation result to memory."""
         self._memory = self._short_memory
+        print(self._memory)
 
     def clean_memory(self):
         """Cleans memorized value"""

@@ -18,6 +18,8 @@ class CalculatorGUI(tk.Frame):
         self.bottom_pad = self.init_bottom_pad()
         self.bottom_pad.pack(side=tk.BOTTOM)
 
+        self.keyboard_binding()
+
     def init_variables(self):
         self.variables['var_1'] = ''
         self.variables['var_2'] = ''
@@ -36,15 +38,15 @@ class CalculatorGUI(tk.Frame):
             command=self.calculator.clean_memory
         ).grid(row=ii, column=0)
         ii += 1
-        # tk.Button(
-        #     mem_pad, text='MR', width=5,
-        #     command=partial(self.update_var, self.calculator.memory)
-        # ).grid(row=ii, column=0)
+        tk.Button(
+            mem_pad, text='MR', width=5,
+            command=self.replace_var
+        ).grid(row=ii, column=0)
         ii += 1
-        # tk.Button(
-        #     mem_pad, text='M+', width=5,
-        #     command=partial(self.calculator.memorize,
-        # ).grid(row=ii, column=0)
+        tk.Button(
+            mem_pad, text='M+', width=5,
+            command=self.calculator.memorize
+        ).grid(row=ii, column=0)
         ii += 1
         tk.Button(
             mem_pad, text='C', width=5,
@@ -68,7 +70,7 @@ class CalculatorGUI(tk.Frame):
         ii += 1
         tk.Button(
             num_pad, text='.', width=5,
-            command=partial(self.update_var, '.')
+            command=self.decimate_var
         ).grid(row=ii // 3, column=ii % 3)
         ii += 1
         tk.Button(
@@ -103,41 +105,70 @@ class CalculatorGUI(tk.Frame):
             self.variables['var_2'] = ''
         self.update_screen()
 
-    def update_var(self, num):
+    def update_var(self, num, *args):
         state = self.state.get()
         if state:
             self.variables['var_1'] += str(num)
             self.variables['var_1'] = self.variables['var_1'].lstrip('0')
+            print(num)
         else:
             self.variables['var_2'] += str(num)
             self.variables['var_2'] = self.variables['var_2'].lstrip('0')
         self.update_screen()
 
-    def set_operator(self, operator):
+    def decimate_var(self):
+        state = self.state.get()
+        if state:
+            if '.' not in self.variables['var_1']:
+                self.variables['var_1'] += '.'
+        else:
+            if '.' not in self.variables['var_2']:
+                self.variables['var_2'] += '.'
+        self.update_screen()
+
+    def replace_var(self):
+        state = self.state.get()
+        num = self.calculator.memory
+        if state:
+            self.variables['var_1'] += str(num)
+        else:
+            self.variables['var_2'] += str(num)
+        self.update_screen()
+
+    def get_var(self):
+        if self.state:
+            return self.variables['var_1']
+        else:
+            return self.variables['var_2']
+
+    def set_operator(self, operator, *args):
         if self.variables['var_1']:
             self.variables['operator'] = operator
             self.state.set(not self.state.get())
             self.update_screen()
 
-    def calculate_result(self):
+    def calculate_result(self, *args):
         if self.variables['var_1'] and self.variables['var_2']:
             var_1 = float(self.variables['var_1'])
             var_2 = float(self.variables['var_2'])
-            self.screen['text'] = self.calculator.run(
+            val = self.calculator.run(
                 self.variables['operator'], var_1, var_2
             )
             self.init_variables()
+            self.screen['text'] = val
+            # self.variables['var_1'] = str(val)
 
     def keyboard_binding(self):
+        self.bind('<Left>', lambda *args: print('kopytko'))
         for num in range(10):
-            self.screen.bind(f'<{num}>', partial(self.update_var, num))
+            self.bind(str(num), partial(self.update_var, num))
         for operation in self.calculator.operations.keys():
             self.screen.bind(f'<{operation}>', partial(self.set_operator, operation))
-        self.screen.bind('<Return>', self.calculate_result)
+        self.bind('<Return>', self.calculate_result)
+        self.focus_set()
 
 
 if __name__ == '__main__':
     root = tk.Tk()
     CalculatorGUI(root).pack()
     root.mainloop()
-# 35
