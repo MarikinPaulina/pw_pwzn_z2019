@@ -162,8 +162,12 @@ class CalculatorGUI(tk.Frame):
         self.bind('<Left>', lambda *args: print('kopytko'))
         for num in range(10):
             self.bind(str(num), partial(self.update_var, num))
-        for operation in self.calculator.operations.keys():
-            self.screen.bind(f'<{operation}>', partial(self.set_operator, operation))
+        operators_strings = {
+            '<plus>': '+',
+            '<minus>': '-'
+        }
+        for key, val in operators_strings.items():
+            self.screen.bind(f'<{key}>', partial(self.set_operator, val))
         self.bind('<Return>', self.calculate_result)
         self.focus_set()
 
