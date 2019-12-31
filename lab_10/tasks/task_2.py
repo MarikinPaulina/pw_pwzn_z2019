@@ -1,5 +1,11 @@
 import pathlib
 from typing import Optional, Union, List
+from urllib.parse import urljoin
+import requests
+from json import JSONDecodeError
+import calendar
+import csv
+from tqdm.auto import tqdm
 
 
 API_URL = 'https://www.metaweather.com/api/'
@@ -10,7 +16,42 @@ def get_city_data(
         path: Optional[Union[str, pathlib.Path]] = None,
         timeout: float = 5.
 ) -> (str, List[str]):
-    pass
+
+    days = calendar.monthrange(year, month)[1]
+
+    if path is None:
+        path = pathlib.Path.cwd()
+    else:
+        path = pathlib.Path(path)
+    path /= f'{woeid}_{year}_{month:02d}'
+    path.mkdir(parents=True, exist_ok=True)
+
+    files = []
+    for day in tqdm(range(1, days+1)):
+        day_str = f'{year}_{month:02d}_{day:02d}.csv'
+        data = get_data(woeid, year, month, day, timeout)
+        if data:
+            with open(path / day_str, 'w') as _file:
+                writer = csv.DictWriter(_file, delimiter=',', quotechar='"', fieldnames=data[0].keys())
+                writer.writeheader()
+                writer.writerows(data)
+            files.append(day_str)
+    return str(path), files
+
+
+def get_data(woeid, year, month, day, timeout):
+    location_url = urljoin(API_URL, f'location/{woeid}/{year}/{month}/{day}')
+
+    data = None
+    response = requests.get(location_url, timeout=timeout)
+    if response.status_code >= 400:
+        raise requests.exceptions.HTTPError
+
+    try:
+        data = response.json()
+    except JSONDecodeError:
+        raise RuntimeError
+    return data
 
 
 if __name__ == '__main__':
