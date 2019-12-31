@@ -110,7 +110,6 @@ class CalculatorGUI(tk.Frame):
         if state:
             self.variables['var_1'] += str(num)
             self.variables['var_1'] = self.variables['var_1'].lstrip('0')
-            print(num)
         else:
             self.variables['var_2'] += str(num)
             self.variables['var_2'] = self.variables['var_2'].lstrip('0')
@@ -159,16 +158,19 @@ class CalculatorGUI(tk.Frame):
             # self.variables['var_1'] = str(val)
 
     def keyboard_binding(self):
-        self.bind('<Left>', lambda *args: print('kopytko'))
         for num in range(10):
-            self.bind(str(num), partial(self.update_var, num))
+            self.bind(f'{num}', partial(self.update_var, num))
+            self.bind(f'KP_{num}', partial(self.update_var, num))
         operators_strings = {
-            '<plus>': '+',
-            '<minus>': '-'
+            'KP_Add': '+',
+            'KP_Subtract': '-',
+            'KP_Multiply': '*',
+            'KP_Divide': '/'
         }
-        for key, val in operators_strings.items():
-            self.screen.bind(f'<{key}>', partial(self.set_operator, val))
+        # for key, val in operators_strings.items():
+            # self.screen.bind(f'<{key}>', partial(self.set_operator, val))
         self.bind('<Return>', self.calculate_result)
+        # self.bind('<Key>', print, add=True)
         self.focus_set()
 
 
