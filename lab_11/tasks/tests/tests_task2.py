@@ -1,8 +1,6 @@
 import pytest
-from unittest.mock import (
-    Mock,
-    patch
-)
+import requests
+import requests_mock
 
 from lab_11.tasks.tools.metaweather import (
     get_metaweather,
@@ -10,26 +8,44 @@ from lab_11.tasks.tools.metaweather import (
 )
 
 
-API_URL = 'https://www.metaweather.com/api/'
+location_url = 'https://www.metaweather.com/api/location/search'
 
 
-@patch('requests')
-def test_json1(requests_mock):
-    response_mock = Mock()
-    response_mock.json.return_value = []
-    requests_mock.get.return_value = response_mock
+@pytest.fixture()
+def mock():
+    with requests_mock.Mocker() as m:
+        yield m
 
+
+def test_json1(mock):
+    mock.get(location_url, json=[])
     assert get_cities_woeid('Warszawa') == {}
-    assert response_mock.call_args_list == [call('')]
 
 
-def test_json1(requests_mock):
-    response_mock = Mock()
-    response_mock.json.return_value = [
+def test_json2(mock):
+    mock.get(location_url, json = [
         {'title': 'Warsaw', 'woeid': 523920},
         {'title': 'Newark', 'woeid': 2459269}
-    ]
-    requests_mock.get.return_value = response_mock
+    ])
+    assert get_cities_woeid('War') == {
+        'Warsaw': 523920,
+        'Newark': 2459269,
+    }
 
-    assert get_cities_woeid('Warszawa') == {}
 
+def test_status(mock):
+    mock.get(location_url, status_code = 404)
+    with pytest.raises(requests.exceptions.HTTPError):
+        get_cities_woeid('wrr')
+
+
+def test_json_conversion(mock):
+    mock.get(location_url, text='!?')
+    # with pytest.raises(RuntimeError) as exc:
+    #     get_cities_woeid('fluskaki')
+    #     assert isinstance(exc.__cause__, TypeError)
+
+
+def test_status_timeout():
+    with pytest.raises(requests.exceptions.Timeout):
+        get_cities_woeid('Warszawa', timeout=1e-7)
