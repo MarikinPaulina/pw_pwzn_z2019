@@ -4,7 +4,20 @@ from time import time
 
 
 def log_run(fun):
-    pass
+    @wraps(fun)
+    def wrapper(*args, **kwargs):
+        opt = ", ".join(kwargs.keys()) if kwargs else '-'
+        string = f"""{datetime.now().strftime('%Y-%m-%dT%H:%M:%S')}| function {fun.__name__} called with:
+{len(args)} postional parameters
+optional parameters: {opt}"""
+        print(string)
+        t = -time()
+        ret = fun(*args, **kwargs)
+        t += time()
+        string = f"returned: {ret} ({t:.3}s)"
+        print(string)
+        return ret
+    return wrapper
 
 
 @log_run
