@@ -1,5 +1,16 @@
 def generate_fibonacci(n=100):
-    pass
+    if not isinstance(n, int) or n < 1:
+        raise RuntimeError
+    n = n if n <= 100 else 100
+    fibonaci1 = 0
+    yield fibonaci1
+    i = 1
+    fibonaci2 = 1
+    while i < n:
+        yield fibonaci2
+        fibonaci1, fibonaci2 = fibonaci2, fibonaci1 + fibonaci2
+        i += 1
+
 
 
 if __name__ == '__main__':
